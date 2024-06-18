@@ -1,5 +1,4 @@
-import { UserIcon } from "./assets";
-import { Header } from "./components";
+import { Header, UserList } from "./components";
 import { Button } from "./components/ui/button";
 import {
   Card,
@@ -12,7 +11,7 @@ import { Input } from "./components/ui/input";
 import { useAuth } from "./contexts";
 
 function App() {
-  const { token, role } = useAuth();
+  const { token, roles } = useAuth();
 
   return (
     <div>
@@ -26,7 +25,7 @@ function App() {
             <Input placeholder="Search Event" />
           </div>
 
-          {token && (
+          {token && roles?.includes("admin") && roles.includes("moderator") && (
             <div className="grid grid-cols-3 gap-5 mt-5">
               <Card>
                 <CardHeader className="items-center">
@@ -82,37 +81,7 @@ function App() {
           </div>
         </section>
 
-        {role === "admin" && token && (
-          <section className="mt-10">
-            <h1 className="text-4xl font-semibold">Users</h1>
-
-            <div className="mt-5">
-              <Input placeholder="Search Users" />
-            </div>
-
-            <div className="mt-5 flex flex-col gap-5">
-              {[1, 2, 3, 4, 5].map((x) => (
-                <Card className="flex overflow-hidden" key={x}>
-                  <div className="p-6">
-                    <UserIcon />
-                  </div>
-                  <div className="flex-grow flex">
-                    <CardHeader className="flex-grow px-0">
-                      <CardTitle className="text-lg">
-                        Friendly Cricket match
-                      </CardTitle>
-                      <CardDescription>Starts in 3 hours</CardDescription>
-                    </CardHeader>
-
-                    <div className="flex items-center p-6">
-                      <Button>Edit</Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </section>
-        )}
+        {roles?.includes("admin") && token && <UserList />}
       </main>
     </div>
   );

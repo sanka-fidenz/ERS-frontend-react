@@ -1,16 +1,14 @@
 import { useAuth } from "@/contexts";
 import { Button } from "../ui/button";
 import { CalendarIcon } from "@/assets";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import LoginForm from "../login-form";
 
 export default function Header() {
-  const { token, role, manageLogin } = useAuth();
+  const { token, roles, manageLogin } = useAuth();
 
-  const handleMangeLogin = () => {
-    if (token || role) {
-      manageLogin(null, null);
-    } else {
-      manageLogin("sample token", "admin");
-    }
+  const handleLogout = () => {
+    manageLogin(null, null);
   };
 
   return (
@@ -20,11 +18,20 @@ export default function Header() {
 
         <h1 className="flex-grow text-4xl font-bold">ERS</h1>
 
-        {(token || role) && <Button>Create New</Button>}
+        {token && roles?.includes("moderator") && <Button>Create New</Button>}
 
-        <Button className="min-w-20" onClick={handleMangeLogin}>
-          {token || role ? "Logout" : "Login"}
-        </Button>
+        {token ? (
+          <Button onClick={handleLogout}>Logout</Button>
+        ) : (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="min-w-20">Login</Button>
+            </DialogTrigger>
+            <DialogContent className="justify-center gap-10">
+              <LoginForm />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </header>
   );

@@ -1,21 +1,21 @@
 import { createContext, useContext, useState } from "react";
 
 const STORAGE_KEYS = {
-  ROLE: "role",
+  ROLE: "roles",
   TOKEN: "token",
 };
 
 type AuthProviderState = {
-  role: "admin" | "moderator" | "user" | null;
+  roles: ("admin" | "moderator" | "user")[] | null;
   token: string | null;
   manageLogin: (
     token: AuthProviderState["token"],
-    role: AuthProviderState["role"]
+    role: AuthProviderState["roles"]
   ) => void;
 };
 
 const initialState: AuthProviderState = {
-  role: null,
+  roles: null,
   token: null,
   manageLogin: () => {},
 };
@@ -23,8 +23,8 @@ const initialState: AuthProviderState = {
 const AuthProviderContext = createContext<AuthProviderState>(initialState);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [role, setRole] = useState<AuthProviderState["role"]>(
-    () => localStorage.getItem(STORAGE_KEYS.ROLE) as AuthProviderState["role"]
+  const [roles, setRole] = useState<AuthProviderState["roles"]>(
+    () => localStorage.getItem(STORAGE_KEYS.ROLE) as AuthProviderState["roles"]
   );
   const [token, setToken] = useState<AuthProviderState["token"]>(() =>
     localStorage.getItem(STORAGE_KEYS.TOKEN)
@@ -32,13 +32,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const manageLogin = (
     token: AuthProviderState["token"],
-    role: AuthProviderState["role"]
+    roles: AuthProviderState["roles"]
   ) => {
-    setRole(role);
+    setRole(roles);
     setToken(token);
 
-    if (role) {
-      localStorage.setItem(STORAGE_KEYS.ROLE, role);
+    if (roles) {
+      localStorage.setItem(STORAGE_KEYS.ROLE, JSON.stringify(roles));
     } else {
       localStorage.removeItem(STORAGE_KEYS.ROLE);
     }
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     token,
-    role,
+    roles,
     manageLogin,
   };
 
