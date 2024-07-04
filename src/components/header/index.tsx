@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { CalendarIcon } from "@/assets";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import LoginForm from "../login-form";
+import CreateUserForm from "../create-user-form";
 
 export default function Header() {
   const { token, roles, manageLogin } = useAuth();
@@ -18,7 +19,16 @@ export default function Header() {
 
         <h1 className="flex-grow text-4xl font-bold">ERS</h1>
 
-        {token && roles?.includes("moderator") && <Button>Create New</Button>}
+        {token && roles?.includes("moderator") && (
+          <Dialog>
+          <DialogTrigger asChild>
+          <Button>Create New</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <CreateUserForm />
+          </DialogContent>
+        </Dialog>
+          )}
 
         {token ? (
           <Button onClick={handleLogout}>Logout</Button>
