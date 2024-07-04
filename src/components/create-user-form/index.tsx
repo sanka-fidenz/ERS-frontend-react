@@ -1,13 +1,10 @@
-import { useAuth } from "@/contexts";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 
 export default function CreateUserForm() {
-  const { manageLogin } = useAuth();
 
-  const handleLogin = () => {
-    manageLogin("sample token", ["admin", "moderator", "user"]);
+  const handleCreateUser = () => {
   };
 
   return (
@@ -41,7 +38,7 @@ export default function CreateUserForm() {
           <label htmlFor="user">User</label>
         </div>
       </div>
-      <Button onClick={handleLogin}>Create</Button>
+      <Button onClick={handleCreateUser}>Create</Button>
     </form>
   );
 }
