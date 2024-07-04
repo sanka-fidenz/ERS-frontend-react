@@ -4,6 +4,7 @@ import { CalendarIcon } from "@/assets";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import LoginForm from "../login-form";
 import CreateNew from "../create-new";
+import CreateUserForm from "../create-user-form";
 
 export default function Header() {
   const { token, roles, manageLogin } = useAuth();
@@ -22,10 +23,21 @@ export default function Header() {
         {token && roles?.includes("moderator") && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Create New</Button>
+              <Button>New Event</Button>
             </DialogTrigger>
             <DialogContent className="gap-10">
               <CreateNew />
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {token && roles?.includes("moderator") && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>New User</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <CreateUserForm />
             </DialogContent>
           </Dialog>
         )}
