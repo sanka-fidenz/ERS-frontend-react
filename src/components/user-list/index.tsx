@@ -1,11 +1,44 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { UserIcon } from "@/assets";
+import { useAxios } from "@/hooks";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Checkbox } from "../ui/checkbox";
 
+type Role = "admin" | "moderator" | "user";
+
 export default function UserList() {
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  const { instance } = useAxios();
+
+  const handleRoleChange = (role: Role) => {
+    setRoles((prev) => {
+      if (prev.includes(role)) {
+        return prev.filter((x) => x !== role);
+      } else {
+        return [...prev, role];
+      }
+    });
+  };
+
+  const handleSave = () => {
+    instance
+      .post("Auth/rolechange", {
+        id: "66879856393cc07804698548",
+        roles: roles.join(","),
+      })
+      .then(() => {
+        toast("Role updated successfully");
+      })
+      .catch(() => {
+        toast("Failed to update role");
+      });
+  };
+
   return (
     <section className="mt-10">
       <h1 className="text-4xl font-semibold">Users</h1>
@@ -46,22 +79,34 @@ export default function UserList() {
 
                     <div className="flex gap-5">
                       <div className="flex items-center gap-4">
-                        <Checkbox id="admin" />
+                        <Checkbox
+                          id="admin"
+                          checked={roles.includes("admin")}
+                          onCheckedChange={() => handleRoleChange("admin")}
+                        />
                         <label htmlFor="admin">Admin</label>
                       </div>
                       <span>|</span>
                       <div className="flex items-center gap-4">
-                        <Checkbox id="moderator" />
+                        <Checkbox
+                          id="moderator"
+                          checked={roles.includes("moderator")}
+                          onCheckedChange={() => handleRoleChange("moderator")}
+                        />
                         <label htmlFor="moderator">Moderator</label>
                       </div>
                       <span>|</span>
                       <div className="flex items-center gap-4">
-                        <Checkbox id="user" />
+                        <Checkbox
+                          id="user"
+                          checked={roles.includes("user")}
+                          onCheckedChange={() => handleRoleChange("user")}
+                        />
                         <label htmlFor="user">User</label>
                       </div>
                     </div>
 
-                    <Button>Save</Button>
+                    <Button onClick={handleSave}>Save</Button>
                   </DialogContent>
                 </Dialog>
               </div>
